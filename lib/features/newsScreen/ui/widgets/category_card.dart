@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-Widget buildCategory(String category) {
+Widget categoryCard(String category) {
   // Define a map of categories and corresponding icons
   Map<String, IconData> categoryIcons = {
+    'All': Icons.all_inclusive_rounded,
     'Sports': Icons.sports,
     'Politics': Icons.public,
     'Technology': Icons.computer,

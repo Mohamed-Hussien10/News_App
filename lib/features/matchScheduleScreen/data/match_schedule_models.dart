@@ -7,9 +7,9 @@ class Fixture {
 
   factory Fixture.fromJson(Map<String, dynamic> json) {
     return Fixture(
-      date: json['date'],
-      status: Status.fromJson(json['status']),
       id: json['id'],
+      date: json['date'] ?? '',
+      status: Status.fromJson(json['status'] ?? {}),
     );
   }
 }
@@ -21,27 +21,33 @@ class Status {
 
   factory Status.fromJson(Map<String, dynamic> json) {
     return Status(
-      long: json['long'],
+      long: json['long'] ?? '',
     );
   }
 }
 
 class League {
   final String name;
+  final String flag;
   final String logo;
   final String country;
+  final String round;
 
   League({
     required this.name,
+    required this.flag,
     required this.country,
     required this.logo,
+    required this.round,
   });
 
   factory League.fromJson(Map<String, dynamic> json) {
     return League(
-      name: json['name'],
-      logo: json['logo'],
-      country: json['country'],
+      name: json['name'] ?? '',
+      flag: json['flag'] ?? '',
+      logo: json['logo'] ?? '',
+      country: json['country'] ?? '',
+      round: json['round'] ?? '',
     );
   }
 }
@@ -54,8 +60,8 @@ class Team {
 
   factory Team.fromJson(Map<String, dynamic> json) {
     return Team(
-      name: json['name'],
-      logo: json['logo'],
+      name: json['name'] ?? '',
+      logo: json['logo'] ?? '',
     );
   }
 }
@@ -79,10 +85,10 @@ class Match {
 
   factory Match.fromJson(Map<String, dynamic> json) {
     return Match(
-      fixture: Fixture.fromJson(json['fixture']),
-      league: League.fromJson(json['league']),
-      homeTeam: Team.fromJson(json['teams']['home']),
-      awayTeam: Team.fromJson(json['teams']['away']),
+      fixture: Fixture.fromJson(json['fixture'] ?? {}),
+      league: League.fromJson(json['league'] ?? {}),
+      homeTeam: Team.fromJson(json['teams']['home'] ?? {}),
+      awayTeam: Team.fromJson(json['teams']['away'] ?? {}),
       homeGoals: json['goals']['home'] ?? 0,
       awayGoals: json['goals']['away'] ?? 0,
     );
