@@ -1,36 +1,22 @@
 class NewsModels {
   final String title;
-  final String? description;
-  final String? image;
-  final SourceModules source;
+  final String description;
+  final String url;
+  final String imageUrl;
 
-  NewsModels(
-      {required this.title,
-      required this.description,
-      required this.image,
-      required this.source});
+  NewsModels({
+    required this.title,
+    required this.description,
+    required this.url,
+    required this.imageUrl,
+  });
 
   factory NewsModels.fromJson(Map<String, dynamic> json) {
     return NewsModels(
-        title: json['title'],
-        description: json['description'],
-        image: json['urlToImage'],
-        source: SourceModules.fromJson(
-          json['source'],
-        ));
-  }
-}
-
-class SourceModules {
-  String id;
-  String name;
-
-  SourceModules({required this.id, required this.name});
-
-  factory SourceModules.fromJson(Map<String, dynamic> json) {
-    return SourceModules(
-      id: json['id'],
-      name: json['name'],
+      title: json['title'] ?? 'No Title',
+      description: json['description'] ?? 'No Description',
+      url: json['url'] ?? '',
+      imageUrl: json['urlToImage'] ?? '',
     );
   }
 }

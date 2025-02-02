@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.schedule),
         title: ("Matches"),
-        activeColorPrimary: Colors.green,
+        activeColorPrimary: Colors.deepPurpleAccent,
         inactiveColorPrimary: Colors.grey,
         iconSize: 30.0, // Change icon size
       ),
@@ -79,7 +79,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
 
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({super.key});
