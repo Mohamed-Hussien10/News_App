@@ -1,3 +1,4 @@
+import 'package:blank_flutter_project/core/widgets/loading_shimmer.dart';
 import 'package:blank_flutter_project/features/newsScreen/data/news_models.dart';
 import 'package:blank_flutter_project/features/newsScreen/data/news_services.dart';
 import 'package:blank_flutter_project/features/newsScreen/ui/widgets/error_message.dart';
@@ -31,7 +32,7 @@ class _NewsListBuilderState extends State<NewsListBuilder> {
           return const SliverToBoxAdapter(child: ErrorMessage());
         } else {
           return const SliverToBoxAdapter(
-              child: Center(child: CircularProgressIndicator()));
+              child: Center(child: LoadingShimmer()));
         }
       },
     );
