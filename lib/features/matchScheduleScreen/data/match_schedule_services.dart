@@ -9,25 +9,29 @@ class MatchScheduleServices {
   MatchScheduleServices(this.dio);
 
   Future<List<Match>> fetchMatches() async {
-    final String apiKey = dotenv.env['API_KEY_MATCHS'] ?? '';
+    try {
+      final String apiKey = dotenv.env['API_KEY_MATCHS'] ?? '';
 
-    // Get the current date in 'yyyy-MM-dd' format
-    String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      // Get the current date in 'yyyy-MM-dd' format
+      String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
-    Response response = await dio.get(
-      'https://v3.football.api-sports.io/fixtures?date=$currentDate',
-      options: Options(
-        headers: {
-          'x-rapidapi-key': apiKey,
-          'x-rapidapi-host': 'v3.football.api-sports.io',
-        },
-      ),
-    );
+      Response response = await dio.get(
+        'https://v3.football.api-sports.io/fixtures?date=$currentDate',
+        options: Options(
+          headers: {
+            'x-rapidapi-key': apiKey,
+            'x-rapidapi-host': 'v3.football.api-sports.io',
+          },
+        ),
+      );
 
-    List<dynamic> responseData = response.data['response'];
-    List<Match> matchList =
-        responseData.map((json) => Match.fromJson(json)).toList();
+      List<dynamic> responseData = response.data['response'];
+      List<Match> matchList =
+          responseData.map((json) => Match.fromJson(json)).toList();
 
-    return matchList;
+      return matchList;
+    } catch (e) {
+      return [];
+    }
   }
 }
