@@ -3,6 +3,7 @@ import 'package:blank_flutter_project/core/helpers/app_localizations.dart';
 import 'package:blank_flutter_project/core/helpers/bloc_observer_checker.dart';
 import 'package:blank_flutter_project/core/helpers/notification_helper.dart';
 import 'package:blank_flutter_project/core/routing/app_router.dart';
+import 'package:blank_flutter_project/features/favorite_screen/data/favorite_notifier.dart';
 import 'package:blank_flutter_project/features/newsScreen/data/news_models.dart';
 import 'package:blank_flutter_project/news_app.dart';
 import 'package:blank_flutter_project/features/newsScreen/data/news_services.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:provider/provider.dart';
 
 /// **WorkManager Callback Function** (Runs in the background)
 void callbackDispatcher() {
@@ -26,7 +28,8 @@ void callbackDispatcher() {
       List<NewsModels> news = await newsService.getTopHeadlines();
 
       if (news.isNotEmpty) {
-        showNotification(news.first.title); // Show the latest news as a notification
+        showNotification(
+            news.first.title); // Show the latest news as a notification
       }
     } catch (e) {
       print("Error fetching news: $e");
@@ -71,7 +74,7 @@ Future<void> main() async {
   await ScreenUtil.ensureScreenSize();
   await NotificationHelper.initialize();
   await EasyLocalization.ensureInitialized();
-  
+
   // Setup dependency injection & BLoC observer
   setupGetIt();
   Bloc.observer = const BlocObserverChecker();
@@ -96,8 +99,14 @@ Future<void> main() async {
       saveLocale: true,
       child: DevicePreview(
         enabled: !kReleaseMode,
-        builder: (context) => NewsApp(
-          appRouter: AppRouter(),
+        builder: (context) => MultiProvider(
+          providers: [
+            // Provide the FavoriteNotifier to the app
+            ChangeNotifierProvider(create: (_) => FavoriteNotifier()),
+          ],
+          child: NewsApp(
+            appRouter: AppRouter(),
+          ),
         ),
       ),
     ),

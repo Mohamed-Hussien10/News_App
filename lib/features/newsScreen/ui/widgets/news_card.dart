@@ -1,8 +1,10 @@
+import 'package:blank_flutter_project/features/favorite_screen/data/favorite_notifier.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:blank_flutter_project/features/newsScreen/data/news_models.dart';
 
-class NewsCard extends StatefulWidget {
+class NewsCard extends StatelessWidget {
   final NewsModels topHeadlines;
 
   const NewsCard({
@@ -11,21 +13,10 @@ class NewsCard extends StatefulWidget {
   });
 
   @override
-  State<NewsCard> createState() => _NewsCardState();
-}
-
-class _NewsCardState extends State<NewsCard> {
-  bool isFavorite = false; // Track favorite status
-
-  Future<void> _launchURL() async {
-    final Uri url = Uri.parse(widget.topHeadlines.url);
-    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-      throw Exception('Could not launch $url');
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final favoriteNotifier = Provider.of<FavoriteNotifier>(context);
+    final isFavorite = favoriteNotifier.isFavorite(topHeadlines);
+
     return LayoutBuilder(
       builder: (context, constraints) {
         return Card(
@@ -45,7 +36,7 @@ class _NewsCardState extends State<NewsCard> {
                       topRight: Radius.circular(15),
                     ),
                     child: Image.network(
-                      widget.topHeadlines.imageUrl,
+                      topHeadlines.imageUrl,
                       height: 200,
                       width: double.infinity,
                       fit: BoxFit.cover,
@@ -59,7 +50,7 @@ class _NewsCardState extends State<NewsCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.topHeadlines.title,
+                          topHeadlines.title,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
@@ -67,7 +58,7 @@ class _NewsCardState extends State<NewsCard> {
                         ),
                         const SizedBox(height: 5),
                         Text(
-                          widget.topHeadlines.description,
+                          topHeadlines.description,
                           style: TextStyle(
                             color: Colors.grey[700],
                           ),
@@ -96,7 +87,13 @@ class _NewsCardState extends State<NewsCard> {
                       IconButton(
                         icon: const Icon(Icons.open_in_browser,
                             color: Colors.white),
-                        onPressed: _launchURL,
+                        onPressed: () async {
+                          final Uri url = Uri.parse(topHeadlines.url);
+                          if (!await launchUrl(url,
+                              mode: LaunchMode.externalApplication)) {
+                            throw Exception('Could not launch $url');
+                          }
+                        },
                       ),
                       IconButton(
                         icon: Icon(
@@ -104,9 +101,19 @@ class _NewsCardState extends State<NewsCard> {
                           color: isFavorite ? Colors.red : Colors.white,
                         ),
                         onPressed: () {
-                          setState(() {
-                            isFavorite = !isFavorite; // Toggle favorite state
-                          });
+                          favoriteNotifier.toggleFavorite(topHeadlines);
+
+                          // Show message when adding/removing from favorites
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                isFavorite
+                                    ? 'Removed from favorites'
+                                    : 'Added to favorites',
+                              ),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
                         },
                       ),
                     ],
