@@ -1,39 +1,46 @@
 import 'package:blank_flutter_project/core/widgets/loading_shimmer.dart';
 import 'package:blank_flutter_project/features/newsScreen/data/news_models.dart';
 import 'package:blank_flutter_project/features/newsScreen/data/news_services.dart';
-import 'package:blank_flutter_project/features/newsScreen/ui/widgets/error_message.dart';
-import 'package:blank_flutter_project/features/newsScreen/ui/widgets/news_list.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'news_card.dart';
 
 class NewsListBuilder extends StatefulWidget {
-  const NewsListBuilder({super.key});
+  final String category;
+
+  const NewsListBuilder({super.key, required this.category});
 
   @override
   State<NewsListBuilder> createState() => _NewsListBuilderState();
 }
 
 class _NewsListBuilderState extends State<NewsListBuilder> {
-  var future;
-  @override
-  void initState() {
-    super.initState();
-    future = NewsServices(Dio()).getTopHeadlines();
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<NewsModels>>(
-      future: future,
+      future: NewsServices(Dio())
+          .getNewsByCategory(widget.category), // Fetch news by category
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return NewsList(topHeadlines: snapshot.data!);
-        } else if (snapshot.hasError) {
-          return const SliverToBoxAdapter(child: ErrorMessage());
-        } else {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return const SliverToBoxAdapter(
-              child: Center(child: LoadingShimmer()));
+            child: Center(child: LoadingShimmer()),
+          );
+        } else if (snapshot.hasError) {
+          return SliverToBoxAdapter(
+            child: Center(child: Text('Error: ${snapshot.error}')),
+          );
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const SliverToBoxAdapter(
+            child: Center(child: Text('No news available')),
+          );
         }
+
+        return SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) => NewsCard(topHeadlines: snapshot.data![index],),
+            childCount: snapshot.data!.length,
+          ),
+        );
       },
     );
   }

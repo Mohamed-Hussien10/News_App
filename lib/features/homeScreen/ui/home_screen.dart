@@ -1,3 +1,4 @@
+import 'package:blank_flutter_project/features/favorite_screen/ui/favorite_screen.dart';
 import 'package:blank_flutter_project/features/matchScheduleScreen/ui/match_schedule_screen.dart';
 import 'package:blank_flutter_project/features/newsScreen/ui/news_screen.dart';
 import 'package:flutter/material.dart';
@@ -80,21 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class FavoritesScreen extends StatelessWidget {
-  const FavoritesScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Favorites'),
-      ),
-      body: const Center(
-        child: Text('Your favorite news and matches will appear here.'),
-      ),
-    );
-  }
-}
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
