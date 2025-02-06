@@ -4,8 +4,9 @@ import 'package:blank_flutter_project/core/helpers/bloc_observer_checker.dart';
 import 'package:blank_flutter_project/core/helpers/notification_helper.dart';
 import 'package:blank_flutter_project/core/routing/app_router.dart';
 import 'package:blank_flutter_project/features/favorite_screen/data/favorite_notifier.dart';
-import 'package:blank_flutter_project/features/newsScreen/data/news_models.dart';
+import 'package:blank_flutter_project/features/setting_screen/data/theme_provider.dart';
 import 'package:blank_flutter_project/news_app.dart';
+import 'package:blank_flutter_project/features/newsScreen/data/news_models.dart';
 import 'package:blank_flutter_project/features/newsScreen/data/news_services.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -20,19 +21,24 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:provider/provider.dart';
 
-/// **WorkManager Callback Function** (Runs in the background)
+/// **WorkManager Background Callback**
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     try {
+      debugPrint("🔄 Fetching latest news in background...");
+
       final newsService = NewsServices(Dio());
       List<NewsModels> news = await newsService.getTopHeadlines();
 
       if (news.isNotEmpty) {
-        showNotification(
-            news.first.title); // Show the latest news as a notification
+        debugPrint("✅ News fetched: ${news.first.title}");
+        await NotificationHelper.initialize();
+        showNotification(news.first.title);
+      } else {
+        debugPrint("⚠️ No news found.");
       }
     } catch (e) {
-      print("Error fetching news: $e");
+      debugPrint("❌ Error fetching news: $e");
     }
     return Future.value(true);
   });
@@ -57,7 +63,7 @@ void showNotification(String message) async {
 
   await flutterLocalNotificationsPlugin.show(
     0,
-    'Daily News Update',
+    '📰 Daily News Update',
     message,
     platformChannelSpecifics,
   );
@@ -101,8 +107,16 @@ Future<void> main() async {
         enabled: !kReleaseMode,
         builder: (context) => MultiProvider(
           providers: [
-            // Provide the FavoriteNotifier to the app
-            ChangeNotifierProvider(create: (_) => FavoriteNotifier()),
+            ChangeNotifierProvider(
+              create: (_) {
+                final favoriteNotifier = FavoriteNotifier();
+                favoriteNotifier.loadFavorites(); // Load favorites on startup
+                return favoriteNotifier;
+              },
+            ),
+            ChangeNotifierProvider(
+              create: (_) => ThemeProvider(), // Provide ThemeProvider
+            ),
           ],
           child: NewsApp(
             appRouter: AppRouter(),

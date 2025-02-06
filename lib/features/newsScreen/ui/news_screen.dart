@@ -28,15 +28,22 @@ class _NewsScreenState extends State<NewsScreen> {
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
+        backgroundColor: Theme.of(context)
+            .appBarTheme
+            .backgroundColor, // Dynamic background color based on theme
+        elevation: Theme.of(context)
+            .appBarTheme
+            .elevation, // Elevation from the active theme
         actions: [
           IconButton(
-            icon: const Icon(Icons.search, color: Colors.black),
+            icon: Icon(
+              Icons.search,
+              color: Theme.of(context).appBarTheme.iconTheme?.color ??
+                  Colors.black, // Dynamic icon color
+            ),
             onPressed: () {
               showSearch(
                 context: context,
