@@ -17,10 +17,17 @@ class FavoritesScreen extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        foregroundColor: Colors.black,
+        backgroundColor: Theme.of(context)
+            .appBarTheme
+            .backgroundColor, // Uses theme background color
+        elevation:
+            Theme.of(context).appBarTheme.elevation, // Uses theme elevation
+        scrolledUnderElevation: Theme.of(context)
+            .appBarTheme
+            .scrolledUnderElevation, // Uses theme scrolledUnderElevation
+        foregroundColor: Theme.of(context)
+            .appBarTheme
+            .foregroundColor, // Uses theme foreground color
       ),
       body: favoriteNotifier.favoriteNews.isEmpty
           ? const Center(child: Text('No favorite news yet.'))

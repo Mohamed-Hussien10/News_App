@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:blank_flutter_project/features/newsScreen/data/news_models.dart';
@@ -8,6 +7,17 @@ class FavoriteNotifier extends ChangeNotifier {
   List<NewsModels> _favoriteNews = [];
 
   List<NewsModels> get favoriteNews => _favoriteNews;
+
+  // Constructor to load favorites when the notifier is created
+  FavoriteNotifier() {
+    _initialize();
+  }
+
+  void _initialize() {
+    Future.microtask(() async {
+      await loadFavorites();
+    });
+  }
 
   // Load favorites from SharedPreferences
   Future<void> loadFavorites() async {
@@ -18,7 +28,7 @@ class FavoriteNotifier extends ChangeNotifier {
       _favoriteNews = favoriteNewsJson
           .map((jsonStr) => NewsModels.fromJson(jsonDecode(jsonStr)))
           .toList();
-      notifyListeners();
+      notifyListeners(); // Notify listeners when loading completes
     }
   }
 

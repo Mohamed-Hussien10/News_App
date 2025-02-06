@@ -65,7 +65,8 @@ class MatchFilterDropdown extends StatelessWidget {
               onLeagueSelected(newValue);
             }
           },
-          dropdownColor: Colors.white, // Keep the dropdown background white for contrast
+          dropdownColor:
+              Colors.white, // Keep the dropdown background white for contrast
         ),
       ),
     );

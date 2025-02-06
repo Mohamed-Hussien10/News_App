@@ -53,7 +53,6 @@ Widget buildCountryHeader(String country, String flagUrl) {
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 20,
-              color: Colors.black,
             ),
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
@@ -94,7 +93,6 @@ Widget buildLeagueHeader(League league) {
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 22,
-                  color: Colors.black,
                 ),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,

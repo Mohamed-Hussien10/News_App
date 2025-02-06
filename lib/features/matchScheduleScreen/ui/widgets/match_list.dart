@@ -23,7 +23,6 @@ class MatchList extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -58,7 +57,8 @@ class MatchList extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 children: [
                   ...sortedLeagues.map((league) {
-                    return buildLeagueSection(leaguesByCountry[league]!.cast<String, List<Match>>());
+                    return buildLeagueSection(
+                        leaguesByCountry[league]!.cast<String, List<Match>>());
                   }),
                   ...otherLeagues.map((league) {
                     return buildLeagueSection(leaguesByCountry[league]!);

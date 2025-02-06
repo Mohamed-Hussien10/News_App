@@ -6,9 +6,16 @@ class LoadingShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Check if the current theme is dark mode
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    // Set shimmer colors based on the theme
+    Color baseColor = isDarkMode ? Colors.grey[700]! : Colors.grey[300]!;
+    Color highlightColor = isDarkMode ? Colors.grey[600]! : Colors.grey[100]!;
+
     return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
+      baseColor: baseColor, // Adjusted base color for dark mode
+      highlightColor: highlightColor, // Adjusted highlight color for dark mode
       child: Column(
         children: List.generate(5, (index) {
           return Container(
@@ -16,7 +23,9 @@ class LoadingShimmer extends StatelessWidget {
             height: 100,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDarkMode
+                  ? Colors.grey[850]
+                  : Colors.white, // Adjusted background color for dark mode
               borderRadius: BorderRadius.circular(12),
             ),
           );
