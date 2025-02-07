@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:blank_flutter_project/features/newsScreen/data/news_models.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class NewsCard extends StatelessWidget {
   final NewsModels topHeadlines;
@@ -17,6 +19,9 @@ class NewsCard extends StatelessWidget {
     final favoriteNotifier = Provider.of<FavoriteNotifier>(context);
     final isFavorite = favoriteNotifier.isFavorite(topHeadlines);
 
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final backgroundColor = isDarkMode ? Colors.black : Colors.white;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         return Card(
@@ -25,22 +30,19 @@ class NewsCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
           ),
           elevation: 4,
+          color: backgroundColor, // Dark/Light mode color support
           child: Stack(
             children: [
               Column(
                 children: [
-                  // News Image
+                  // News Image with Shimmer + Cached Loading
                   ClipRRect(
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(15),
                       topRight: Radius.circular(15),
                     ),
-                    child: Image.network(
-                      topHeadlines.imageUrl,
-                      height: 200,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
+                    child:
+                        _buildImageWithLoading(context, topHeadlines.imageUrl),
                   ),
 
                   // News Title and Description
@@ -51,16 +53,19 @@ class NewsCard extends StatelessWidget {
                       children: [
                         Text(
                           topHeadlines.title,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
+                            color: isDarkMode ? Colors.white : Colors.black,
                           ),
                         ),
                         const SizedBox(height: 5),
                         Text(
                           topHeadlines.description,
                           style: TextStyle(
-                            color: Colors.grey[700],
+                            color: isDarkMode
+                                ? Colors.grey[400]
+                                : Colors.grey[700],
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -124,6 +129,43 @@ class NewsCard extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  // Function for modern image loading with shimmer and fade-in effect
+  Widget _buildImageWithLoading(BuildContext context, String imageUrl) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
+      height: 200,
+      width: double.infinity,
+      fit: BoxFit.cover,
+      placeholder: (context, url) => Shimmer.fromColors(
+        baseColor: isDarkMode ? Colors.grey[800]! : Colors.grey[300]!,
+        highlightColor: isDarkMode ? Colors.grey[600]! : Colors.grey[100]!,
+        child: Container(
+          height: 200,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: isDarkMode ? Colors.black : Colors.white,
+            borderRadius: BorderRadius.circular(15),
+          ),
+        ),
+      ),
+      errorWidget: (context, url, error) => _buildPlaceholderImage(isDarkMode),
+    );
+  }
+
+  // Placeholder for missing images
+  Widget _buildPlaceholderImage(bool isDarkMode) {
+    return Container(
+      height: 200,
+      width: double.infinity,
+      color: isDarkMode ? Colors.grey[800] : Colors.grey[300],
+      child: const Center(
+        child: Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+      ),
     );
   }
 }

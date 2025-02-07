@@ -52,8 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.settings),
         title: ("Profile"),
-        activeColorPrimary:
-            isDarkMode ? Colors.purpleAccent : Colors.purpleAccent,
+        activeColorPrimary: isDarkMode ? Colors.teal : Colors.teal,
         inactiveColorPrimary: isDarkMode ? Colors.white60 : Colors.grey,
         iconSize: 30.0,
       ),

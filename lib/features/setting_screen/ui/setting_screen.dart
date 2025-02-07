@@ -16,63 +16,101 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = themeProvider.isDarkMode;
+    final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
+    final cardColor = Theme.of(context).cardColor;
+    final iconColor = isDarkMode ? Colors.white : Colors.black87;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('settings'.tr()),
+        title: Text(
+          'settings'.tr(),
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        elevation: 2,
       ),
-      body: SingleChildScrollView(
+      body: Container(
         padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(12),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Theme Toggle
-            ListTile(
-              title: Text('dark_mode'.tr()),
-              trailing: Switch(
-                value: themeProvider.isDarkMode,
-                onChanged: (value) {
-                  themeProvider.toggleTheme(); // This triggers theme change
-                },
+            Card(
+              color: cardColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: ListTile(
+                leading: Icon(Icons.dark_mode, color: iconColor),
+                title: Text('dark_mode'.tr()),
+                trailing: Switch(
+                  value: isDarkMode,
+                  onChanged: (value) {
+                    themeProvider.toggleTheme();
+                  },
+                ),
               ),
             ),
+
+            const SizedBox(height: 12),
 
             // Language Selection
-            ListTile(
-              title: Text('language'.tr()),
-              trailing: DropdownButton<Locale>(
-                value: Locale(
-                  context.locale.languageCode,
-                  context.locale.countryCode ?? '',
+            Card(
+              color: cardColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: ListTile(
+                leading: Icon(Icons.language, color: iconColor),
+                title: Text('language'.tr()),
+                trailing: DropdownButton<Locale>(
+                  value: Locale(
+                    context.locale.languageCode,
+                    context.locale.countryCode ?? '',
+                  ),
+                  onChanged: (Locale? newLocale) {
+                    if (newLocale != null) {
+                      context.setLocale(newLocale);
+                    }
+                  },
+                  items: const [
+                    DropdownMenuItem(
+                      value: Locale('en', 'US'),
+                      child: Text('English'),
+                    ),
+                    DropdownMenuItem(
+                      value: Locale('ar', 'EG'),
+                      child: Text('العربية'),
+                    ),
+                  ],
                 ),
-                onChanged: (Locale? newLocale) {
-                  if (newLocale != null) {
-                    context.setLocale(newLocale);
-                  }
-                },
-                items: const [
-                  DropdownMenuItem(
-                    value: Locale('en', 'US'),
-                    child: Text('English'),
-                  ),
-                  DropdownMenuItem(
-                    value: Locale('ar', 'EG'),
-                    child: Text('العربية'),
-                  ),
-                ],
               ),
             ),
 
+            const SizedBox(height: 12),
+
             // Notifications Toggle
-            ListTile(
-              title: Text('notifications'.tr()),
-              trailing: Switch(
-                value: isNotificationsEnabled,
-                onChanged: (value) {
-                  setState(() {
-                    isNotificationsEnabled = value;
-                  });
-                },
+            Card(
+              color: cardColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: ListTile(
+                leading: Icon(Icons.notifications_active, color: iconColor),
+                title: Text('notifications'.tr()),
+                trailing: Switch(
+                  value: isNotificationsEnabled,
+                  onChanged: (value) {
+                    setState(() {
+                      isNotificationsEnabled = value;
+                    });
+                  },
+                ),
               ),
             ),
           ],
