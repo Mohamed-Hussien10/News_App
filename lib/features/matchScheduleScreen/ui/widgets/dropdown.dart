@@ -14,36 +14,44 @@ class MatchFilterDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final backgroundColor = isDarkMode ? Colors.grey[900] : Colors.white;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+    final borderColor =
+        isDarkMode ? Colors.deepPurpleAccent.shade100 : Colors.deepPurpleAccent;
+    final shadowColor = isDarkMode ? Colors.black54 : Colors.black26;
+    final dropdownColor = isDarkMode ? Colors.grey[800] : Colors.white;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: Colors.deepPurpleAccent,
+            color: borderColor,
             width: 2,
           ),
-          boxShadow: const [
+          boxShadow: [
             BoxShadow(
-              color: Colors.black26,
+              color: shadowColor,
               blurRadius: 6,
-              offset: Offset(0, 2),
+              offset: const Offset(0, 2),
             ),
           ],
         ),
         child: DropdownButton<String>(
           value: selectedLeague,
-          style: const TextStyle(
-            color: Colors.deepPurple,
+          style: TextStyle(
+            color: textColor,
             fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
           underline: Container(), // Remove underline for cleaner look
           isExpanded: true,
           iconSize: 28,
-          iconEnabledColor: Colors.deepPurpleAccent,
+          iconEnabledColor: borderColor,
           items: famousLeagues.map((String league) {
             return DropdownMenuItem<String>(
               value: league,
@@ -51,10 +59,10 @@ class MatchFilterDropdown extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Text(
                   league,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black,
+                    color: textColor,
                   ),
                 ),
               ),
@@ -65,8 +73,7 @@ class MatchFilterDropdown extends StatelessWidget {
               onLeagueSelected(newValue);
             }
           },
-          dropdownColor:
-              Colors.white, // Keep the dropdown background white for contrast
+          dropdownColor: dropdownColor, // Dynamic dropdown background
         ),
       ),
     );

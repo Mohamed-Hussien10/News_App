@@ -1,7 +1,7 @@
+import 'package:blank_flutter_project/core/widgets/loading_shimmer.dart';
 import 'package:blank_flutter_project/features/matchScheduleScreen/data/match_schedule_models.dart';
 import 'package:blank_flutter_project/features/matchScheduleScreen/ui/widgets/league_header.dart';
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
 
 class MatchList extends StatelessWidget {
   const MatchList({
@@ -19,10 +19,14 @@ class MatchList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final containerColor = isDarkMode ? Colors.black : Colors.white;
+
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
+          color: containerColor, // Set color based on theme
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -37,20 +41,9 @@ class MatchList extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 itemCount: 6, // Show a few loading placeholders
                 itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                  );
+                  return const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      child: LoadingShimmer());
                 },
               )
             : ListView(

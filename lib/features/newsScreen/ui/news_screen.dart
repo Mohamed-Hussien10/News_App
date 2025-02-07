@@ -21,6 +21,9 @@ class _NewsScreenState extends State<NewsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final iconColor = isDarkMode ? Colors.white : Colors.black;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -31,19 +34,11 @@ class _NewsScreenState extends State<NewsScreen> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: Theme.of(context)
-            .appBarTheme
-            .backgroundColor, // Dynamic background color based on theme
-        elevation: Theme.of(context)
-            .appBarTheme
-            .elevation, // Elevation from the active theme
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        elevation: Theme.of(context).appBarTheme.elevation,
         actions: [
           IconButton(
-            icon: Icon(
-              Icons.search,
-              color: Theme.of(context).appBarTheme.iconTheme?.color ??
-                  Colors.black, // Dynamic icon color
-            ),
+            icon: Icon(Icons.search, color: iconColor),
             onPressed: () {
               showSearch(
                 context: context,
