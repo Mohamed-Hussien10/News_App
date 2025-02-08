@@ -59,6 +59,13 @@ dev_dependencies:
     sdk: flutter
   build_runner: # dart run build_runner build
   flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/app_icon/logo.png"
+  adaptive_icon_background: "#ef445a"
 
 flutter:
   uses-material-design: true
@@ -67,6 +74,7 @@ flutter:
     - assets/images/
     - assets/translations/
     - .env
+    - assets/images/app_icon/logo.png
 #  fonts:
 #    - family: Kanit
 #      fonts:
