@@ -46,9 +46,9 @@ The **InstaNews App** provides users with up-to-date news articles, categorized 
    ```
 
 ## Future Enhancements
-- 🔹 **AI-powered News Summarization**
-- 🔹 **Push Notifications for Breaking News**
-- 🔹 **Personalized News Feeds**
+-  **AI-powered News Summarization**
+-  **Push Notifications for Breaking News**
+-  **Personalized News Feeds**
 
 ## Contributing
 Contributions are welcome! Please follow these steps:
